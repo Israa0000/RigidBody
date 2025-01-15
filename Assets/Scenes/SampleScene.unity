@@ -523,7 +523,8 @@ MonoBehaviour:
   ground:
     serializedVersion: 2
     m_Bits: 8
-  isGround: 0
+  isGrounded: 0
+  maxJumpTime: 1
 --- !u!1 &1415665548
 GameObject:
   m_ObjectHideFlags: 0

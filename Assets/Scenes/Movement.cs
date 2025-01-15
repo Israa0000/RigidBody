@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class Movement : MonoBehaviour
 {
     Rigidbody2D rb;
     [SerializeField] float acceleration = 6f;
     [SerializeField] float maxSpeed = 1f; //velocidad maxima
     [SerializeField] LayerMask ground;
-    [SerializeField] bool isGround = false;
-
+    [SerializeField] bool isGrounded;
+    [SerializeField] float maxJumpTime = 1f;
+    [SerializeField] float jumpForce = 5f;
+    [SerializeField] bool isJumping;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -18,9 +20,12 @@ public class NewBehaviourScript : MonoBehaviour
 
     void Update()
     {
-        Vector2 movementInput = new Vector2 (0,0);
+    float jumpTime;
+    bool jumpInput = Input.GetKeyDown(KeyCode.Space);
 
-        isGround = Physics2D.Raycast(
+        Vector2 horizontalInput = new Vector2 (0,0);
+
+        isGrounded = Physics2D.Raycast(
             gameObject.transform.position,
             Vector2.down,
             0.7f,
@@ -28,12 +33,12 @@ public class NewBehaviourScript : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D))
         {
-            movementInput += new Vector2(1, 0);
+            horizontalInput += new Vector2(1, 0);
         }
 
         if (Input.GetKey(KeyCode.A))
         {
-            movementInput += new Vector2(-1, 0);
+            horizontalInput += new Vector2(-1, 0);
         }
 
         if (rb.velocity.x > maxSpeed)
@@ -46,10 +51,29 @@ public class NewBehaviourScript : MonoBehaviour
             rb.velocity = new Vector2(-maxSpeed, rb.velocity.y);
         }
 
-        if (Input.GetKey(KeyCode.Space) && isGround)
+        if (isGrounded && jumpInput)
         {
-            movementInput = movementInput + new Vector2 (0,5);
+            isJumping = true; 
+            jumpTime = 0f;
+            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
         }
-        rb.velocity += movementInput * acceleration * Time.deltaTime;
+        if (isJumping)
+        {
+            jumpTime = Time.deltaTime;
+
+            if (jumpTime > maxJumpTime)
+            {
+                isJumping = false;
+            }
+        }
+
+
+
+        rb.velocity += horizontalInput * acceleration * Time.deltaTime;
+
+       // if (isGround = false && Input.GetKey(KeyCode.Space))
+       // {
+         //   movementInput = movementInput + new Vector2(0, 5);
+        //}
     }
 }
