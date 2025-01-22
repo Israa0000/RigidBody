@@ -353,10 +353,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1306666514}
+  - component: {fileID: 1306666515}
   - component: {fileID: 1306666513}
   - component: {fileID: 1306666512}
   - component: {fileID: 1306666511}
-  - component: {fileID: 1306666515}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -500,7 +500,7 @@ Transform:
   m_GameObject: {fileID: 1306666510}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.12, y: -2.38, z: 0}
+  m_LocalPosition: {x: -0.12, y: -2.321, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -520,11 +520,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acceleration: 12.56
   maxSpeed: 5
+  isGrounded: 0
+  maxJumpTime: 1
+  jumpForce: 4
+  isJumping: 0
+  jumpTime: 0
   ground:
     serializedVersion: 2
     m_Bits: 8
-  isGrounded: 0
-  maxJumpTime: 1
+  gradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0, a: 1}
+    key1: {r: 0.7199943, g: 1, b: 0, a: 1}
+    key2: {r: 0, g: 0.77792454, b: 1, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 19969
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_ColorSpace: -1
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  currentJumps: 0
+  maxJump: 3
+  groundCheckDistance: 0.6
+  groundCheckOrigin: {fileID: 0}
 --- !u!1 &1415665548
 GameObject:
   m_ObjectHideFlags: 0
