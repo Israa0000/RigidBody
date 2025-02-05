@@ -16,15 +16,21 @@ public class Movement : MonoBehaviour
     [SerializeField] Gradient gradient;
     [SerializeField] int currentJumps = 0;
     [SerializeField] int maxJump = 3;
-    [SerializeField] float groundCheckDistance = 0.6f;
-    [SerializeField] Transform groundCheckOrigin;
+    SpriteRenderer spriteRenderer;
+    [SerializeField] float raycastDistance = 0.51f;
+    [SerializeField] bool a = false;
+    [SerializeField] ParticleSystem landingDust;
+    [SerializeField] ParticleSystem trail;
+    [SerializeField] bool wasGrounded;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(0, 0);
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
-        //gradient.Evaluate(__)
+        //movimiento particulas
+    
     }
 
     void Update()
@@ -34,8 +40,9 @@ public class Movement : MonoBehaviour
         isGrounded = Physics2D.Raycast(
             gameObject.transform.position,
             Vector2.down,
-            0.5f,
+            raycastDistance,
             ground);
+
 
         if (Input.GetKey(KeyCode.D))
         {
@@ -57,27 +64,30 @@ public class Movement : MonoBehaviour
             rb.velocity = new Vector2(-maxSpeed, rb.velocity.y);
         }
 
+        rb.velocity += horizontalInput * acceleration * Time.deltaTime;
+
+
         //Salto
         bool jumpInputStart = Input.GetKeyDown(KeyCode.Space);
         bool jumpInput = Input.GetKey(KeyCode.Space);
         bool jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
 
-        if (isGrounded)
-        {
-            currentJumps = 0; 
-        }
-
         // comprobar y almacenar si puedo comenzar un salto (isJumping)
-        if (jumpInputStart && currentJumps < maxJump)
+        if (jumpInputStart && (isGrounded || currentJumps < maxJump))
         {
             if (isGrounded)
             {
                 currentJumps = 1;
             }
             currentJumps++;
-            print(currentJumps);
             isJumping = true;
             jumpTime = 0;
+            if (a) a = false;
+        }
+
+        if (isGrounded)
+        {
+            currentJumps = 0;
         }
 
         if (isJumping)
@@ -92,8 +102,24 @@ public class Movement : MonoBehaviour
             isJumping = false;
         }
 
-        rb.velocity += horizontalInput * acceleration * Time.deltaTime;
+        //color
+        float normalizedJumpCount = Mathf.InverseLerp(0, maxJump, currentJumps); //interpolacion lineal inversa// modificar la formula 
+        spriteRenderer.color = gradient.Evaluate(normalizedJumpCount);
+
+        //particulas
+        CheckGroundDust();
+
+        //almacenar isGrounded en el ultimo frame
+        wasGrounded = isGrounded;
     }
+    void CheckGroundDust()
+    {
+        if (isGrounded && !wasGrounded)
+        {
+            landingDust.Play();
+        }
+    }
+
 
     private void OnDrawGizmos()
     {
@@ -101,7 +127,7 @@ public class Movement : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, 0.01f);
         Gizmos.DrawLine(
             gameObject.transform.position,
-            gameObject.transform.position + Vector3.down * 0.5f
+            gameObject.transform.position + Vector3.down * raycastDistance
             );
     }
 }
