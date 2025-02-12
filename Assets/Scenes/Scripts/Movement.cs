@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    Stats stats;
     Rigidbody2D rb;
-    [SerializeField] float acceleration = 6f;
-    [SerializeField] float maxSpeed = 1f; 
     [SerializeField] bool isGrounded;
-    [SerializeField] float maxJumpTime = 1f;
-    [SerializeField] float jumpForce;
     [SerializeField] bool isJumping;
     [SerializeField] float jumpTime;
     [SerializeField] LayerMask ground;
@@ -17,10 +14,9 @@ public class Movement : MonoBehaviour
     [SerializeField] int currentJumps = 0;
     [SerializeField] int maxJump = 3;
     SpriteRenderer spriteRenderer;
-    [SerializeField] float raycastDistance = 0.51f;
+    [SerializeField] float raycastDistance = 0.4f;
     [SerializeField] bool a = false;
     [SerializeField] ParticleSystem landingDust;
-    [SerializeField] ParticleSystem trail;
     [SerializeField] bool wasGrounded;
 
     void Start()
@@ -28,14 +24,21 @@ public class Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.velocity = new Vector2(0, 0);
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        //movimiento particulas
-    
     }
 
     void Update()
     {
-        Vector2 horizontalInput = new Vector2 (0,0);
+        CheckGroundDust();
+        Jump();
+        Move();
+        JumpColor();
+        wasGrounded = isGrounded;
+    }
+
+    //MOVIMIENTO HORIZONTAL
+    void Move()
+    {
+        Vector2 horizontalInput = new Vector2(0, 0);
 
         isGrounded = Physics2D.Raycast(
             gameObject.transform.position,
@@ -54,25 +57,26 @@ public class Movement : MonoBehaviour
             horizontalInput += new Vector2(-1, 0);
         }
 
-        if (rb.velocity.x > maxSpeed)
+        if (rb.velocity.x > stats.maxSpeed)
         {
-            rb.velocity = new Vector2(maxSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(stats.maxSpeed, rb.velocity.y);
         }
 
-        if (rb.velocity.x < -maxSpeed)
+        if (rb.velocity.x < -stats.maxSpeed)
         {
-            rb.velocity = new Vector2(-maxSpeed, rb.velocity.y);
+            rb.velocity = new Vector2(-stats.maxSpeed, rb.velocity.y);
         }
-
-        rb.velocity += horizontalInput * acceleration * Time.deltaTime;
-
-
-        //Salto
+        
+        rb.velocity += horizontalInput * stats.acceleration * Time.deltaTime;
+    }
+    void Jump()
+    {
+        // SALTO
         bool jumpInputStart = Input.GetKeyDown(KeyCode.Space);
         bool jumpInput = Input.GetKey(KeyCode.Space);
         bool jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
 
-        // comprobar y almacenar si puedo comenzar un salto (isJumping)
+        // COMPROBAR Y ALMACENAR SI PUEDO HACER UN SALTO (isJumping)
         if (jumpInputStart && (isGrounded || currentJumps < maxJump))
         {
             if (isGrounded)
@@ -92,26 +96,24 @@ public class Movement : MonoBehaviour
 
         if (isJumping)
         {
-            rb.velocity = new Vector2 (rb.velocity.x, jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, stats.jumpForce);
             jumpTime += Time.deltaTime;
         }
 
-        // comprobar si tiene que terminar de aplicarse la fuerza del salto
-        if (jumpInputEnd || jumpTime > maxJumpTime)
+        // COMPROBAR SI TIENE QUE TERMINAR DE APLICARSE LA FUERZA DE SALTO
+        if (jumpInputEnd || jumpTime > stats.maxJumpTime)
         {
             isJumping = false;
         }
+    }
 
-        //color
+    // COLOR
+    void JumpColor() {
         float normalizedJumpCount = Mathf.InverseLerp(0, maxJump, currentJumps); //interpolacion lineal inversa// modificar la formula 
         spriteRenderer.color = gradient.Evaluate(normalizedJumpCount);
-
-        //particulas
-        CheckGroundDust();
-
-        //almacenar isGrounded en el ultimo frame
-        wasGrounded = isGrounded;
     }
+    
+    // PARTICULAS
     void CheckGroundDust()
     {
         if (isGrounded && !wasGrounded)
@@ -119,7 +121,6 @@ public class Movement : MonoBehaviour
             landingDust.Play();
         }
     }
-
 
     private void OnDrawGizmos()
     {
@@ -129,5 +130,9 @@ public class Movement : MonoBehaviour
             gameObject.transform.position,
             gameObject.transform.position + Vector3.down * raycastDistance
             );
+    }
+    public void SetMovementProfile(Stats newStats)
+    {
+        stats = newStats;
     }
 }

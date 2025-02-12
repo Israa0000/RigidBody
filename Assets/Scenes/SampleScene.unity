@@ -5232,6 +5232,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1306666514}
+  - component: {fileID: 1306666516}
   - component: {fileID: 1306666515}
   - component: {fileID: 1306666513}
   - component: {fileID: 1306666512}
@@ -5398,11 +5399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300f23d4f42ba6243a650ac22d89854a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 12.56
-  maxSpeed: 5
   isGrounded: 0
-  maxJumpTime: 1
-  jumpForce: 4
   isJumping: 0
   jumpTime: 0
   ground:
@@ -5443,8 +5440,23 @@ MonoBehaviour:
   raycastDistance: 0.515
   a: 0
   landingDust: {fileID: 626930192}
-  trail: {fileID: 0}
   wasGrounded: 0
+--- !u!114 &1306666516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306666510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4ad5e2d4bf7f484d813c403012bebf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStats:
+  - {fileID: 11400000, guid: 2b6541a990519b34997c9e8091e78b45, type: 2}
+  - {fileID: 11400000, guid: f50a30bc4064dc143954f9b72a793fe9, type: 2}
+  - {fileID: 11400000, guid: ddeb421ac570db74882530e5008d72ff, type: 2}
 --- !u!1 &1403258596
 GameObject:
   m_ObjectHideFlags: 0
