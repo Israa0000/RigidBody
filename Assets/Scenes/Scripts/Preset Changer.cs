@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class PresetChanger : MonoBehaviour
 {
-    Stats newStats;
     [SerializeField] List<Stats> playerStats = new List<Stats>();
     private Movement playerMovement;
     private int currentPreset = 0;

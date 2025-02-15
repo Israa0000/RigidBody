@@ -9,4 +9,9 @@ public class Stats : ScriptableObject
     public float maxSpeed;
     public float maxJumpTime;
     public float jumpForce;
+    public float riseGravity;
+    public float peakGravity;
+    public float descentGravity;
+    public float onGroundGravity;
+
 }

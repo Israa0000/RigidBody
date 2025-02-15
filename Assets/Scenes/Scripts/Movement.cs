@@ -4,20 +4,34 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    Stats stats;
+    public Stats stats;
     Rigidbody2D rb;
-    [SerializeField] bool isGrounded;
-    [SerializeField] bool isJumping;
-    [SerializeField] float jumpTime;
-    [SerializeField] LayerMask ground;
-    [SerializeField] Gradient gradient;
+    SpriteRenderer spriteRenderer;
+
+    [Header("Jump Settings")]
+    [SerializeField] public bool isGrounded;
+    [SerializeField] public bool isJumping;
+    [SerializeField] public bool wasGrounded;
+    [SerializeField] public float jumpTime;
+    public bool jumpInputStart;
+    public bool jumpInput;
+    public bool jumpInputEnd;
     [SerializeField] int currentJumps = 0;
     [SerializeField] int maxJump = 3;
-    SpriteRenderer spriteRenderer;
+
+    [Header("Layer")]
+    [SerializeField] LayerMask ground;
+
+    [Header("Color")]
+    [SerializeField] Gradient gradient;
+
+    [Header("Gizmo")]
     [SerializeField] float raycastDistance = 0.4f;
-    [SerializeField] bool a = false;
+
+    [Header("Particles")]
     [SerializeField] ParticleSystem landingDust;
-    [SerializeField] bool wasGrounded;
+
+    Vector2 horizontalInput;
 
     void Start()
     {
@@ -25,27 +39,13 @@ public class Movement : MonoBehaviour
         rb.velocity = new Vector2(0, 0);
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-
-    void Update()
+    public void Update()
     {
-        CheckGroundDust();
-        Jump();
-        Move();
-        JumpColor();
-        wasGrounded = isGrounded;
-    }
+        bool jumpInputStart = Input.GetKeyDown(KeyCode.Space);
+        bool jumpInput = Input.GetKey(KeyCode.Space);
+        bool jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
 
-    //MOVIMIENTO HORIZONTAL
-    void Move()
-    {
-        Vector2 horizontalInput = new Vector2(0, 0);
-
-        isGrounded = Physics2D.Raycast(
-            gameObject.transform.position,
-            Vector2.down,
-            raycastDistance,
-            ground);
-
+        horizontalInput = Vector2.zero;
 
         if (Input.GetKey(KeyCode.D))
         {
@@ -56,6 +56,28 @@ public class Movement : MonoBehaviour
         {
             horizontalInput += new Vector2(-1, 0);
         }
+        JumpColor();
+        wasGrounded = isGrounded;
+    }
+
+    private void FixedUpdate()
+    {
+        CheckGroundStatus();
+        CheckGroundDust();
+        Jump();
+        Move();
+    }
+    void CheckGroundStatus()
+    {
+        isGrounded = Physics2D.Raycast(
+            gameObject.transform.position,
+            Vector2.down,
+            raycastDistance,
+            ground);
+    }
+
+    void Move()
+    {
 
         if (rb.velocity.x > stats.maxSpeed)
         {
@@ -69,14 +91,12 @@ public class Movement : MonoBehaviour
         
         rb.velocity += horizontalInput * stats.acceleration * Time.deltaTime;
     }
-    void Jump()
+    public void Jump()
     {
-        // SALTO
         bool jumpInputStart = Input.GetKeyDown(KeyCode.Space);
         bool jumpInput = Input.GetKey(KeyCode.Space);
         bool jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
 
-        // COMPROBAR Y ALMACENAR SI PUEDO HACER UN SALTO (isJumping)
         if (jumpInputStart && (isGrounded || currentJumps < maxJump))
         {
             if (isGrounded)
@@ -86,7 +106,6 @@ public class Movement : MonoBehaviour
             currentJumps++;
             isJumping = true;
             jumpTime = 0;
-            if (a) a = false;
         }
 
         if (isGrounded)
@@ -100,7 +119,6 @@ public class Movement : MonoBehaviour
             jumpTime += Time.deltaTime;
         }
 
-        // COMPROBAR SI TIENE QUE TERMINAR DE APLICARSE LA FUERZA DE SALTO
         if (jumpInputEnd || jumpTime > stats.maxJumpTime)
         {
             isJumping = false;
@@ -108,13 +126,13 @@ public class Movement : MonoBehaviour
     }
 
     // COLOR
-    void JumpColor() {
+    public void JumpColor() {
         float normalizedJumpCount = Mathf.InverseLerp(0, maxJump, currentJumps); //interpolacion lineal inversa// modificar la formula 
         spriteRenderer.color = gradient.Evaluate(normalizedJumpCount);
     }
     
     // PARTICULAS
-    void CheckGroundDust()
+    public void CheckGroundDust()
     {
         if (isGrounded && !wasGrounded)
         {

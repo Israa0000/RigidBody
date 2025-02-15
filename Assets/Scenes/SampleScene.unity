@@ -307,6 +307,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 519420032}
+  - component: {fileID: 519420033}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   m_Layer: 0
@@ -390,6 +391,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 209809b988fcb4c429e31d33e15e6541, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smoothTime: 0.3
+  target: {fileID: 1306666514}
 --- !u!1 &626930189
 GameObject:
   m_ObjectHideFlags: 0
@@ -5232,8 +5247,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1306666514}
-  - component: {fileID: 1306666516}
   - component: {fileID: 1306666515}
+  - component: {fileID: 1306666517}
+  - component: {fileID: 1306666516}
   - component: {fileID: 1306666513}
   - component: {fileID: 1306666512}
   - component: {fileID: 1306666511}
@@ -5399,9 +5415,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 300f23d4f42ba6243a650ac22d89854a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stats: {fileID: 0}
   isGrounded: 0
   isJumping: 0
+  wasGrounded: 0
   jumpTime: 0
+  jumpInputStart: 0
+  jumpInput: 0
+  jumpInputEnd: 0
+  currentJumps: 0
+  maxJump: 3
   ground:
     serializedVersion: 2
     m_Bits: 8
@@ -5435,12 +5458,8 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
-  currentJumps: 0
-  maxJump: 3
   raycastDistance: 0.515
-  a: 0
   landingDust: {fileID: 626930192}
-  wasGrounded: 0
 --- !u!114 &1306666516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5457,6 +5476,22 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2b6541a990519b34997c9e8091e78b45, type: 2}
   - {fileID: 11400000, guid: f50a30bc4064dc143954f9b72a793fe9, type: 2}
   - {fileID: 11400000, guid: ddeb421ac570db74882530e5008d72ff, type: 2}
+--- !u!114 &1306666517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306666510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a900fcc7b59df94ea04682cf259ced0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  riseColor: {r: 1, g: 1, b: 0, a: 1}
+  peakColor: {r: 0, g: 0.20118594, b: 1, a: 1}
+  descentColor: {r: 1, g: 0, b: 0, a: 1}
+  groundColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1403258596
 GameObject:
   m_ObjectHideFlags: 0

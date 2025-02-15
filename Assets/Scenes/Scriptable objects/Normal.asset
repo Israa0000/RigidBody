@@ -16,3 +16,7 @@ MonoBehaviour:
   maxSpeed: 10
   maxJumpTime: 1
   jumpForce: 4
+  riseGravity: 0.7
+  peakGravity: 1
+  descentGravity: 2.27
+  onGroundGravity: 1
