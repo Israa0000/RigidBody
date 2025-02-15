@@ -19,14 +19,14 @@ public class Movement : MonoBehaviour
     [SerializeField] int currentJumps = 0;
     [SerializeField] int maxJump = 3;
 
-    [Header("Layer")]
+    [Header("Contact Layer")]
     [SerializeField] LayerMask ground;
 
     [Header("Color")]
     [SerializeField] Gradient gradient;
 
-    [Header("Gizmo")]
-    [SerializeField] float raycastDistance = 0.4f;
+    [Header("Gizmo y Raycast")]
+    [SerializeField] float raycastDistance = 0.5f;
 
     [Header("Particles")]
     [SerializeField] ParticleSystem landingDust;
@@ -41,9 +41,9 @@ public class Movement : MonoBehaviour
     }
     public void Update()
     {
-        bool jumpInputStart = Input.GetKeyDown(KeyCode.Space);
-        bool jumpInput = Input.GetKey(KeyCode.Space);
-        bool jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
+        jumpInputStart = (Input.GetKeyDown(KeyCode.Space));
+        jumpInput = Input.GetKey(KeyCode.Space);
+        jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
 
         horizontalInput = Vector2.zero;
 
@@ -56,17 +56,18 @@ public class Movement : MonoBehaviour
         {
             horizontalInput += new Vector2(-1, 0);
         }
+        Jump();
+        Move();
+        CheckGroundStatus();
+        CheckGroundDust();
         JumpColor();
         wasGrounded = isGrounded;
     }
-
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        CheckGroundStatus();
-        CheckGroundDust();
-        Jump();
-        Move();
+
     }
+    //RAYCAST
     void CheckGroundStatus()
     {
         isGrounded = Physics2D.Raycast(
@@ -74,10 +75,18 @@ public class Movement : MonoBehaviour
             Vector2.down,
             raycastDistance,
             ground);
+
+        if (isGrounded)
+        {
+            currentJumps = 0;
+            isJumping = false;
+        }
+        
     }
 
     void Move()
     {
+        rb.velocity += horizontalInput * stats.acceleration * Time.deltaTime;
 
         if (rb.velocity.x > stats.maxSpeed)
         {
@@ -88,14 +97,13 @@ public class Movement : MonoBehaviour
         {
             rb.velocity = new Vector2(-stats.maxSpeed, rb.velocity.y);
         }
-        
-        rb.velocity += horizontalInput * stats.acceleration * Time.deltaTime;
     }
+
     public void Jump()
     {
-        bool jumpInputStart = Input.GetKeyDown(KeyCode.Space);
-        bool jumpInput = Input.GetKey(KeyCode.Space);
-        bool jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
+        jumpInputStart = Input.GetKeyDown(KeyCode.Space);
+        jumpInput = Input.GetKey(KeyCode.Space);
+        jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
 
         if (jumpInputStart && (isGrounded || currentJumps < maxJump))
         {
@@ -106,6 +114,7 @@ public class Movement : MonoBehaviour
             currentJumps++;
             isJumping = true;
             jumpTime = 0;
+
         }
 
         if (isGrounded)

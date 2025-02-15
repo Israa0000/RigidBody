@@ -32,11 +32,12 @@ public class Gravity : MonoBehaviour
         isGrounded = playerMovement.isGrounded;
         verticalVelocity = rb.velocity.y;
         Particles();
+        PlayerGravity();
     }
 
     private void FixedUpdate()
     {
-        PlayerGravity();
+
     }
 
     void PlayerGravity()

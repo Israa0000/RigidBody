@@ -13,5 +13,4 @@ public class Stats : ScriptableObject
     public float peakGravity;
     public float descentGravity;
     public float onGroundGravity;
-
 }
