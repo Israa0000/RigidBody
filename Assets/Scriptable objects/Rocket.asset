@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a9c1ea93262c248a5deb9c4436e780, type: 3}
   m_Name: Rocket
   m_EditorClassIdentifier: 
-  acceleration: 10
-  maxSpeed: 10
-  maxJumpTime: 1.5
+  groundAcceleration: 10
+  maxGroundHorizontalSpeed: 10
+  groundHorizontalFriction: 1
+  airAcceleration: 15
+  airHorizontalFriction: 1
+  maxAirHorizontalSpeed: 20
+  yVelocityLowGravityThreshold: 3
+  onAirJumps: 2
   jumpForce: 8
-  riseGravity: 1
-  peakGravity: 1
-  descentGravity: 2
-  onGroundGravity: 1
+  maxJumpTime: 1.5
+  maxFallSpeed: 20
+  defaultGravity: 1
+  peakGravity: 0.5
+  fallingGravity: 4

@@ -195,7 +195,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      white_circle_w_transparent_bg_0: 3599873573673241975
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -56,16 +56,18 @@ public class Movement : MonoBehaviour
         {
             horizontalInput += new Vector2(-1, 0);
         }
+        JumpColor();
         Jump();
         Move();
-        CheckGroundStatus();
-        CheckGroundDust();
-        JumpColor();
         wasGrounded = isGrounded;
     }
     void FixedUpdate()
     {
+        CheckGroundStatus();
+        CheckGroundDust();
 
+        jumpInputStart = false;
+        jumpInputEnd = false;
     }
     //RAYCAST
     void CheckGroundStatus()
@@ -86,26 +88,53 @@ public class Movement : MonoBehaviour
 
     void Move()
     {
-        rb.velocity += horizontalInput * stats.acceleration * Time.deltaTime;
-
-        if (rb.velocity.x > stats.maxSpeed)
+        if (isGrounded)
         {
-            rb.velocity = new Vector2(stats.maxSpeed, rb.velocity.y);
+            rb.velocity += horizontalInput * stats.groundAcceleration * Time.deltaTime;
+
+            if (rb.velocity.x > stats.maxGroundHorizontalSpeed)
+            {
+                rb.velocity = new Vector2(stats.maxGroundHorizontalSpeed, rb.velocity.y);
+            }
+
+            if (rb.velocity.x < -stats.maxGroundHorizontalSpeed)
+            {
+                rb.velocity = new Vector2(-stats.maxGroundHorizontalSpeed, rb.velocity.y);
+            }
+
+            rb.velocity = new Vector2(rb.velocity.x * stats.groundHorizontalFriction, rb.velocity.y);
         }
-
-        if (rb.velocity.x < -stats.maxSpeed)
+        else
         {
-            rb.velocity = new Vector2(-stats.maxSpeed, rb.velocity.y);
+            rb.velocity += horizontalInput * stats.airAcceleration * Time.deltaTime;
+
+            if (rb.velocity.x > stats.maxAirHorizontalSpeed)
+            {
+                rb.velocity = new Vector2(stats.maxAirHorizontalSpeed, rb.velocity.y);
+            }
+
+            if (rb.velocity.x < -stats.maxAirHorizontalSpeed)
+            {
+                rb.velocity = new Vector2(-stats.maxAirHorizontalSpeed, rb.velocity.y);
+            }
+
+            rb.velocity = new Vector2(rb.velocity.x * stats.airHorizontalFriction, rb.velocity.y);
+
+            if (rb.velocity.y < stats.yVelocityLowGravityThreshold)
+            {
+                rb.gravityScale = stats.fallingGravity;
+            }
+            else
+            {
+                rb.gravityScale = stats.defaultGravity;
+            }
         }
     }
 
+
     public void Jump()
     {
-        jumpInputStart = Input.GetKeyDown(KeyCode.Space);
-        jumpInput = Input.GetKey(KeyCode.Space);
-        jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
-
-        if (jumpInputStart && (isGrounded || currentJumps < maxJump))
+        if (jumpInputStart && (isGrounded || currentJumps < stats.onAirJumps))
         {
             if (isGrounded)
             {

@@ -7,6 +7,7 @@ public class Gravity : MonoBehaviour
     Rigidbody2D rb;
     Movement playerMovement;
     new ParticleSystem particleSystem;
+    ParticleSystem.MainModule mainModule;
 
     [Header("Particles Color")]
     [SerializeField] Color riseColor;
@@ -22,6 +23,7 @@ public class Gravity : MonoBehaviour
         Transform childTransform = transform.Find("GameObject/Trail");
         particleSystem = childTransform.GetComponent<ParticleSystem>();
         rb = GetComponent<Rigidbody2D>();
+        mainModule = particleSystem.main;
         playerMovement = GetComponent<Movement>();
 
     }
@@ -32,28 +34,27 @@ public class Gravity : MonoBehaviour
         isGrounded = playerMovement.isGrounded;
         verticalVelocity = rb.velocity.y;
         Particles();
-        PlayerGravity();
     }
 
     private void FixedUpdate()
     {
+        PlayerGravity();
 
     }
 
     void PlayerGravity()
     {
-        var main = particleSystem;
 
         //ON GROUND
         if (isGrounded)
         {
-            rb.gravityScale = playerMovement.stats.onGroundGravity;
+            rb.gravityScale = playerMovement.stats.defaultGravity;
         }
 
         //RISE
         if (playerMovement.isJumping && verticalVelocity > 0)
         {
-            rb.gravityScale = playerMovement.stats.riseGravity;
+            rb.gravityScale = playerMovement.stats.defaultGravity;
         }
 
         //PEAK
@@ -65,36 +66,35 @@ public class Gravity : MonoBehaviour
         //DESCENT
         if (verticalVelocity < 0 && playerMovement.isGrounded == false)
         {
-            rb.gravityScale = playerMovement.stats.descentGravity;
+            rb.gravityScale = playerMovement.stats.fallingGravity;
         }
     }
 
     void Particles()
     {
-        var main = particleSystem;
 
         //ON GROUND
         if (isGrounded)
         {
-            main.startColor = groundColor;
+            mainModule.startColor = groundColor;
         }
 
         //RISE
         if (playerMovement.isJumping && verticalVelocity > 0)
         {
-            main.startColor = riseColor;
+            mainModule.startColor = riseColor;
         }
 
         //PEAK
         if (isGrounded == false && isJumping == false)
         {
-            main.startColor = peakColor;
+            mainModule.startColor = peakColor;
         }
 
         //DESCENT
         if (verticalVelocity < 0 && playerMovement.isGrounded == false)
         {
-            main.startColor = descentColor;
+            mainModule.startColor = descentColor;
         }
     }
 
