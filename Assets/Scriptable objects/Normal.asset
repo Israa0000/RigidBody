@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a9c1ea93262c248a5deb9c4436e780, type: 3}
   m_Name: Normal
   m_EditorClassIdentifier: 
+  presetName: Normal
   groundAcceleration: 10
   maxGroundHorizontalSpeed: 4
   groundHorizontalFriction: 1
@@ -23,6 +24,7 @@ MonoBehaviour:
   jumpForce: 4
   maxJumpTime: 1
   maxFallSpeed: 15
+  maxJumps: 3
   defaultGravity: 1
   peakGravity: 0.8
   fallingGravity: 2

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Xml;
+using TMPro;
 using UnityEngine;
 
 public class PresetChanger : MonoBehaviour
@@ -6,6 +8,8 @@ public class PresetChanger : MonoBehaviour
     [SerializeField] List<Stats> playerStats = new List<Stats>();
     private Movement playerMovement;
     private int currentPreset = 0;
+    [SerializeField] TMP_Text textCurrentPreset;
+
     public void AddElement(Stats newStat)
     {
         playerStats.Add(newStat);
@@ -35,7 +39,8 @@ public class PresetChanger : MonoBehaviour
         if (index >= 0 && index < playerStats.Count)
         {
             Stats selectedPreset = playerStats[index];
-            playerMovement.SetMovementProfile(selectedPreset); 
+            playerMovement.SetMovementProfile(selectedPreset);
+            textCurrentPreset.text = selectedPreset.presetName;
         }
     }
 }

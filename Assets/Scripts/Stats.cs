@@ -5,6 +5,8 @@ using UnityEngine;
 [CreateAssetMenu (fileName = "New Movement Parameters", menuName = "Movement Parameters")]
 public class Stats : ScriptableObject
 {
+    public string presetName;
+
     [Header("On Ground stats")]
     public float groundAcceleration;
     public float maxGroundHorizontalSpeed;
@@ -21,6 +23,7 @@ public class Stats : ScriptableObject
     public float jumpForce;
     public float maxJumpTime;
     public float maxFallSpeed;
+    public int maxJumps;
 
     [Header("Gravity stats")]
     public float defaultGravity;

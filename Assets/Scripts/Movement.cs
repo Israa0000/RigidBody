@@ -17,7 +17,6 @@ public class Movement : MonoBehaviour
     public bool jumpInput;
     public bool jumpInputEnd;
     [SerializeField] int currentJumps = 0;
-    [SerializeField] int maxJump = 3;
 
     [Header("Contact Layer")]
     [SerializeField] LayerMask ground;
@@ -42,8 +41,23 @@ public class Movement : MonoBehaviour
     public void Update()
     {
         jumpInputStart = (Input.GetKeyDown(KeyCode.Space));
-        jumpInput = Input.GetKey(KeyCode.Space);
+
+        if (jumpInputStart)
+        {
+            if (currentJumps < stats.onAirJumps || isGrounded)
+            {
+                isJumping = true;
+                currentJumps++;
+                jumpTime = 0;
+            }
+        }
+
         jumpInputEnd = Input.GetKeyUp(KeyCode.Space);
+
+        if (jumpInputEnd || jumpTime >= stats.maxJumpTime || stats.maxJumps < currentJumps)
+        {
+            isJumping = false;
+        }
 
         horizontalInput = Vector2.zero;
 
@@ -56,13 +70,15 @@ public class Movement : MonoBehaviour
         {
             horizontalInput += new Vector2(-1, 0);
         }
-        JumpColor();
-        Jump();
-        Move();
+
+        Spawn();
         wasGrounded = isGrounded;
     }
     void FixedUpdate()
     {
+        JumpColor();
+        Jump();
+        Move();
         CheckGroundStatus();
         CheckGroundDust();
 
@@ -86,6 +102,16 @@ public class Movement : MonoBehaviour
         
     }
 
+    void Spawn()
+    {
+        Vector3 currentPosition = gameObject.transform.position;
+
+        if (currentPosition.y <= -3)
+        {
+            currentPosition = new Vector3(1, -2, 0);
+            gameObject.transform.position = currentPosition;
+        }
+    }
     void Move()
     {
         if (isGrounded)
@@ -165,7 +191,7 @@ public class Movement : MonoBehaviour
 
     // COLOR
     public void JumpColor() {
-        float normalizedJumpCount = Mathf.InverseLerp(0, maxJump, currentJumps); //interpolacion lineal inversa// modificar la formula 
+        float normalizedJumpCount = (float)currentJumps / stats.maxJumps;
         spriteRenderer.color = gradient.Evaluate(normalizedJumpCount);
     }
     

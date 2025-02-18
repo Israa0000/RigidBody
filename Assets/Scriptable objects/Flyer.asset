@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74a9c1ea93262c248a5deb9c4436e780, type: 3}
   m_Name: Flyer
   m_EditorClassIdentifier: 
+  presetName: Flyer
   groundAcceleration: 10
   maxGroundHorizontalSpeed: 10
   groundHorizontalFriction: 1
@@ -23,6 +24,7 @@ MonoBehaviour:
   jumpForce: 7
   maxJumpTime: 1.5
   maxFallSpeed: -9
+  maxJumps: 2
   defaultGravity: 0.5
   peakGravity: 0.5
   fallingGravity: 0.3
